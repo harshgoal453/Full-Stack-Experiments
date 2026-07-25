@@ -1,0 +1,32 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+}
+
+.container {
+  width: 700px;
+  margin: 30px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+select,
+textarea {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+button {
+  padding: 10px 18px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.draft-card {
+  border: 1px solid gray;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 8px;
+}
