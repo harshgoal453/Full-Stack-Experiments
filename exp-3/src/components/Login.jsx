@@ -1,42 +1,72 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../utils/auth";
+import { generateToken, saveToken } from "../utils/auth";
 
 function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    login(role);
+  const handleLogin = (e) => {
+    e.preventDefault();
 
-    if (role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/user");
+    if (!username || !password) {
+      setError("Please enter username and password");
+      return;
     }
+
+    const user = {
+      username,
+      role
+    };
+
+    const token = generateToken(user);
+
+    saveToken(token);
+
+    navigate("/dashboard");
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Login Page</h2>
+    <div className="login-container">
+      <div className="login-box">
+        <h1>JWT Authentication</h1>
 
-      <label>Select Role: </label>
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            placeholder="Enter username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-      <select
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      >
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-      </select>
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-      <br />
-      <br />
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
 
-      <button onClick={handleLogin}>
-        Login
-      </button>
+          {error && <p className="error">{error}</p>}
+
+          <button type="submit">Login</button>
+        </form>
+
+        <p className="demo-text">
+          Select a role to test RBAC.
+        </p>
+      </div>
     </div>
   );
 }

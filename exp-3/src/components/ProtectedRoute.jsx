@@ -1,15 +1,15 @@
 import { Navigate } from "react-router-dom";
-import { getUser, isAuthenticated } from "../utils/auth";
+import { getUserFromToken } from "../utils/auth";
 
-function ProtectedRoute({ children, role }) {
-  if (!isAuthenticated()) {
-    return <Navigate to="/" />;
+function ProtectedRoute({ children, allowedRoles }) {
+  const user = getUserFromToken();
+
+  if (!user) {
+    return <Navigate to="/" replace />;
   }
 
-  const user = getUser();
-
-  if (user.role !== role) {
-    return <Navigate to="/unauthorized" />;
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;

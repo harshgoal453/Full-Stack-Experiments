@@ -1,36 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
-import { logout, isAuthenticated, getUser } from "../utils/auth";
+import { getUserFromToken, removeToken } from "../utils/auth";
 
 function Navbar() {
   const navigate = useNavigate();
-
-  const user = getUser();
+  const user = getUserFromToken();
 
   const handleLogout = () => {
-    logout();
+    removeToken();
     navigate("/");
   };
 
   return (
-    <nav style={{ padding: "10px", background: "#ddd" }}>
-      <Link to="/">Home</Link> |{" "}
-      <Link to="/user">User</Link> |{" "}
-      <Link to="/admin">Admin</Link>
+    <nav className="navbar">
+      <h2>Experiment 3</h2>
 
-      {isAuthenticated() && (
-        <>
-          <span style={{ marginLeft: "20px" }}>
-            Welcome {user.username} ({user.role})
-          </span>
+      <div>
+        <Link to="/dashboard">Dashboard</Link>
 
-          <button
-            onClick={handleLogout}
-            style={{ marginLeft: "20px" }}
-          >
-            Logout
-          </button>
-        </>
-      )}
+        {user?.role === "admin" && (
+          <Link to="/admin">Admin</Link>
+        )}
+
+        <button onClick={handleLogout}>Logout</button>
+      </div>
     </nav>
   );
 }
